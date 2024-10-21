@@ -3,17 +3,26 @@ on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: Set up Node.js
+
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+
       - name: Install dependencies
         run: yarn install
+
       - name: Lint the project
         run: yarn lint --fix
+
+      # Nieuwe stap om de Docker-image te bouwen
+      - name: Build Docker image
+        run: |
+          docker build -t ArneDeJonghe/webapp:latest .
