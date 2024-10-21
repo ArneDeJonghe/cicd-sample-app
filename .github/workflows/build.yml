@@ -34,7 +34,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # Stap om de Docker-image te pushen naar Docker Hub
-      - name: Push Docker image to Docker Hub
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/webapp:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          tags: arnedejonghe/webapp:latest
+          push: true
