@@ -1,4 +1,4 @@
-name: Build and test
+name: Build and push Docker image
 on:
   push:
     branches:
@@ -22,8 +22,19 @@ jobs:
       - name: Lint the project
         run: yarn lint --fix
 
-      # Nieuwe stap om de Docker-image te bouwen
+      # Stap om Docker-image te bouwen
       - name: Build Docker image
         run: |
-          docker build -t ArneDeJonghe/webapp:latest .
-          
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/webapp:latest .
+
+      # Stap om in te loggen bij Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      # Stap om de Docker-image te pushen naar Docker Hub
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/webapp:latest
